@@ -3,7 +3,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 
 import relationship_app.views as views 
-
+views.register
 
 urlpatterns = [
     path('books/', list_books, name='list_books'),
