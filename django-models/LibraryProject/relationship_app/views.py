@@ -5,6 +5,7 @@ from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login
+from django.contrib.auth.decorators import user_passes_test
 
 
 # Function-based view
@@ -23,4 +24,17 @@ class Register(CreateView):
     template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')
 
-UserCreationForm()
+
+
+
+@user_passes_test(lambda u: u.is_authenticated and u.userprofile.role == 'Admin')
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+@user_passes_test(lambda u: u.is_authenticated and u.userprofile.role == 'Librarian')
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+@user_passes_test(lambda u: u.is_authenticated and u.userprofile.role == 'Member')
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
