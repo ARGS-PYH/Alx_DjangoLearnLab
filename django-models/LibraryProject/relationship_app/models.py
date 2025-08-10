@@ -16,6 +16,16 @@ class Book(models.Model):
     publication_year = models.PositiveIntegerField()
     author = models.ForeignKey(Author, related_name="books", on_delete=models.CASCADE)
 
+    class Meta:
+        permissions = [
+            ("can_add_book", "Can add a new book"),
+            ("can_change_book", "Can edit an existing book"),
+            ("can_delete_book", "Can delete a book"),
+        ]
+
+    def __str__(self):
+        return self.title
+
 class Library(models.Model):
     name = models.CharField(max_length=200)
     books = models.ManyToManyField(Book, related_name="library")
@@ -49,3 +59,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
+
+
