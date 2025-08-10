@@ -1,6 +1,12 @@
 from django.urls import path
+from .views import *
 from django.contrib.auth import views as auth_views
+from django.urls import path
 from . import views
+
+import relationship_app.views as views 
+
+
 
 urlpatterns = [
     path('books/', views.list_books, name='list_books'),
@@ -14,3 +20,5 @@ urlpatterns = [
     path('librarian-page/', views.librarian_view, name='librarian_view'),
     path('member-page/', views.member_view, name='member_view'),
 ]
+
+
