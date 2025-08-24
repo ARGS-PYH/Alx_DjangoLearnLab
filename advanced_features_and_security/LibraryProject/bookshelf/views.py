@@ -56,7 +56,7 @@ def delete_book(request, book_id):
 
 
 @csrf_protect
-def example_form_view(request):
+def form_example_view(request):
     if request.method == "POST":
         form = ExampleForm(request.POST)
         if form.is_valid():
@@ -65,3 +65,4 @@ def example_form_view(request):
         form = ExampleForm()
 
     return render(request, 'bookshelf/form_example.html', {'form': form})
+
