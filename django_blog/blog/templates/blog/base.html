@@ -1,0 +1,11 @@
+<html>
+<head>
+    <title>Django Blog</title>
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+</head>
+<body>
+    <h1>Welcome to Django Blog</h1>
+    {% block content %}{% endblock %}
+    <script src="{% static 'blog/script.js' %}"></script>
+</body>
+</html>
