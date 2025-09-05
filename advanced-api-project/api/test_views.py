@@ -121,5 +121,17 @@ class BookAPITests(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         years = [b["publication_year"] for b in res.data]
         self.assertEqual(years, sorted(years, reverse=True))
+    def test_create_book_with_login(self):
+        login = self.client.login(username="testuser", password="testpass")
+        self.assertTrue(login)
+        payload = {
+            "title": "Purple Hibiscus",
+            "publication_year": 2003,
+            "author": self.author1.id,
+        }
+        response = self.client.post(self.create_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["title"], payload["title"])
+
 
 
