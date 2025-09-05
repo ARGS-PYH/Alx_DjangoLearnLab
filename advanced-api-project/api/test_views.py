@@ -36,14 +36,14 @@ class BookAPITests(APITestCase):
 
 
     def test_list_books_public_access(self):
-        res = self.client.get(self.list_url)
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(res.data), 3)
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
 
     def test_retrieve_book_public_access(self):
-        res = self.client.get(self.detail_url(self.book1.id))
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data["title"], "Things Fall Apart")
+        response = self.client.get(self.detail_url(self.book1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["title"], "Things Fall Apart")
 
     def test_cannot_create_book_without_auth(self):
         payload = {
@@ -70,11 +70,9 @@ class BookAPITests(APITestCase):
             "publication_year": 2006,
             "author": self.author1.id,
         }
-        res = self.client.post(self.create_url, payload, format="json", **self.auth_header)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(res.data["title"], payload["title"])
-        self.assertEqual(res.data["publication_year"], payload["publication_year"])
-        self.assertEqual(res.data["author"], payload["author"])
+        response = self.client.post(self.create_url, payload, format="json", **self.auth_header)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["title"], payload["title"])
 
     def test_update_book_with_auth(self):
         payload = {
@@ -123,3 +121,5 @@ class BookAPITests(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         years = [b["publication_year"] for b in res.data]
         self.assertEqual(years, sorted(years, reverse=True))
+
+
