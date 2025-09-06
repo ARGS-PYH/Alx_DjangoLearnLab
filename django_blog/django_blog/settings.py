@@ -16,10 +16,12 @@ LOGOUT_REDIRECT_URL = "/"
 import os
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-TEMPLATES[0]["DIRS"] = [ BASE_DIR / "templates" ]
+#TEMPLATES[0]['DIRS'] = [BASE_DIR / "templates"]
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "blog" / "static"]
@@ -63,7 +65,7 @@ ROOT_URLCONF = 'django_blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "blog" / "templates"],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
