@@ -1,17 +1,18 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import Post
-from .models import Comment
-
+from taggit.forms import TagWidget
+from .models import Post, Comment
 
 User = get_user_model()
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
-
+        fields = ['title', 'content', 'tags'] 
+        widgets = {
+            'tags': TagWidget(), 
+        }
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -26,7 +27,6 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
 
 class CommentForm(forms.ModelForm):
     class Meta:

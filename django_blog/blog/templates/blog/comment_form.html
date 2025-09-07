@@ -1,9 +1,13 @@
-{% extends "blog/base.html" %}
+{% extends "base.html" %}
 {% block content %}
-  <h2>{{ view.object|default:"New Comment" }}</h2>
+  <h2>{% if object %}Edit Comment{% else %}New Comment{% endif %}</h2>
   <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+
+  {% if object %}
+    <a href="{{ object.post.get_absolute_url }}">Back to Post</a>
+  {% endif %}
 {% endblock %}

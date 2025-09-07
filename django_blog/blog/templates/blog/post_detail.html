@@ -11,6 +11,16 @@
 
 <hr>
 
+<p><strong>Tags:</strong>
+  {% for tag in object.tags.all %}
+    <a href="{% url 'tag-list' tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+  {% empty %}
+    No tags
+  {% endfor %}
+</p>
+
+<hr>
+
 <h2>Comments</h2>
 {% for comment in object.comments.all %}
   <div style="margin-bottom: 10px; padding: 5px; border: 1px solid #ddd;">
