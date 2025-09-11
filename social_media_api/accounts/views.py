@@ -1,41 +1,39 @@
-from rest_framework import generics, permissions, status
-from rest_framework.response import Response
-from .serializers import RegisterSerializer, UserSerializer
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework.views import APIView
-from rest_framework.authtoken.views import ObtainAuthToken
 
 User = get_user_model()
 
-class RegisterAPIView(generics.CreateAPIView):
-    serializer_class = RegisterSerializer
-    permission_classes = [permissions.AllowAny]
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        token = Token.objects.get(user=user).key
-        data = UserSerializer(user).data
-        data["token"] = token
-        return Response(data, status=status.HTTP_201_CREATED)
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'password2', 'bio', 'profile_picture']
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        password = validated_data.pop('password')
+        user = get_user_model().objects.create_user(
+            **validated_data,
+            password=password
+        )
+        Token.objects.create(user=user)
+        return user
 
 
-class ProfileAPIView(generics.RetrieveUpdateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
-    def get_object(self):
-        return self.request.user
 
-class CustomObtainAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        token = response.data.get('token')
-        user = Token.objects.get(key=token).user
-        data = {
-            'token': token,
-            'user': UserSerializer(user).data
-        }
-        return Response(data)
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture']
